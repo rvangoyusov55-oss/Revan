@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="az">
+<head>
+    <meta charset="UTF-8">
+    <title>MedCloud | Qeydiyyat</title>
+    <style>
+        body { font-family: sans-serif; background: #eef2f7; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        .reg-card { background: white; padding: 30px; border-radius: 12px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); width: 350px; }
+        h2 { color: #00d1b2; text-align: center; }
+        input, select { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; }
+        button { width: 100%; padding: 12px; background: #00d1b2; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 16px; }
+        button:hover { background: #00b89c; }
+        .back-link { display: block; text-align: center; margin-top: 15px; color: #666; text-decoration: none; font-size: 14px; }
+    </style>
+</head>
+<body>
+    <div class="reg-card">
+        <h2>Yeni Pasiyent</h2>
+        <input type="text" id="reg_name" placeholder="Ad Soyad">
+        <input type="text" id="reg_fin" placeholder="FIN Kod">
+        <select id="reg_blood">
+            <option value="A+">A (II) RH+</option>
+            <option value="B+">B (III) RH+</option>
+            <option value="O+">O (I) RH+</option>
+            <option value="AB+">AB (IV) RH+</option>
+        </select>
+        <input type="password" id="reg_pass" placeholder="Şifrə">
+        <button onclick="submitRegister()">Qeydiyyatı Tamamla</button>
+        <a href="/" class="back-link">← Geri qayıt</a>
+    </div>
+
+    <script>
+        async function submitRegister() {
+            const name = document.getElementById('reg_name').value;
+            const fin = document.getElementById('reg_fin').value;
+            const blood = document.getElementById('reg_blood').value;
+            const pass = document.getElementById('reg_pass').value;
+
+            if(!name || !fin || !pass) {
+                alert("Bütün xanaları doldurun!");
+                return;
+            }
+
+            try {
+                const res = await fetch('/api/register', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({ name, fin, blood, pass })
+                });
+
+                const result = await res.json();
+
+                if (res.ok && result.success) {
+                    alert("Qeydiyyat uğurludur!");
+                    window.location.href = "/";
+                } else {
+                    alert("Xəta: Bu FIN artıq istifadə edilib və ya sistem xətası.");
+                }
+            } catch (err) {
+                console.error("Qeydiyyat xətası:", err);
+                alert("Serverlə əlaqə yaradıla bilmədi.");
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="az">
+<head>
+    <meta charset="UTF-8">
+    <title>MedCloud - Pasiyent Portalı</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        /* Əvvəlki CSS stilləri buraya daxildir... */
+        :root { --bg: #f0f4f8; --primary: #0056b3; --text: #2d3436; }
+        body { margin: 0; font-family: sans-serif; display: flex; background: var(--bg); height: 100vh; }
+        .sidebar { width: 260px; background: white; border-right: 1px solid #ddd; padding: 30px 0; }
+        .main { flex: 1; padding: 30px; overflow-y: auto; }
+        header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
+        .profile { display: flex; align-items: center; }
+        .avatar { width: 45px; height: 45px; background: #00d1b2; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; margin-right: 10px; font-weight: bold; }
+        .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; margin-bottom: 30px; }
+        .stat-card { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
+        .update-box { background: white; padding: 20px; border-radius: 12px; margin-bottom: 20px; border: 1px solid #0056b3; }
+        input { padding: 10px; border: 1px solid #ddd; border-radius: 5px; margin-right: 10px; }
+        button.update-btn { padding: 10px 20px; background: #0056b3; color: white; border: none; border-radius: 5px; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <div style="padding: 0 30px 40px; font-size: 24px; font-weight: bold; color: var(--primary);">MedCloud</div>
+        <div style="padding: 15px 30px; color: var(--primary); background: #f1f8ff; border-left: 4px solid var(--primary);">Ana Səhifə</div>
+    </div>
+
+    <div class="main">
+        <header>
+            <div>
+                <h1 style="margin:0;">Xoş gəldiniz!</h1>
+                <p id="welcomeNote">Səhhətiniz bizim üçün önəmlidir.</p>
+            </div>
+            <div class="profile">
+                <div class="avatar" id="avatarInitial">?</div>
+                <span id="userName" style="font-weight:bold;">Yüklənir...</span>
+            </div>
+        </header>
+
+        <div class="update-box">
+            <h3>Göstəricilərimi Yenilə</h3>
+            <input type="number" id="inputBPM" placeholder="Ürək Döyüntüsü (BPM)">
+            <input type="text" id="inputBP" placeholder="Təzyiq (Məs: 120/80)">
+            <button class="update-btn" onclick="updateDashboard()">Məlumatı Dəyiş</button>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <h4>Ürək Döyüntüsü</h4>
+                <div class="value" id="valBPM">72 BPM</div>
+            </div>
+            <div class="stat-card">
+                <h4>Qan Təzyiqi</h4>
+                <div class="value" id="valBP">120/80</div>
+            </div>
+            <div class="stat-card">
+                <h4>Qan Şəkəri</h4>
+                <div class="value">95 mg/dL</div>
+            </div>
+            <div class="stat-card">
+                <h4>BMI İndeksi</h4>
+                <div class="value">22.4</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 1. İSTİFADƏÇİ MƏLUMATLARININ İNTEQRASİYASI
+        const userDate = localStorage.getItem('user');
+        if (userDate) {
+            const user = JSON.parse(userDate);
+            document.getElementById('userName').innerText = user.full_name;
+            document.getElementById('avatarInitial').innerText = user.full_name.charAt(0).toUpperCase();
+            document.getElementById('welcomeNote').innerText = `Hörmətli ${user.full_name}, sağlamlıq vəziyyətinizə nəzarət edin.`;
+        } else {
+            window.location.href = "/";
+        }
+
+        // 2. DƏYƏRLƏRİ ÖZÜNÜN ƏLAVƏ ETMƏSİ FUNKSİYASI
+        function updateDashboard() {
+            const bpm = document.getElementById('inputBPM').value;
+            const bp = document.getElementById('inputBP').value;
+
+            if (bpm) document.getElementById('valBPM').innerText = bpm + " BPM";
+            if (bp) document.getElementById('valBP').innerText = bp;
+
+            alert("Məlumatlar ekranda yeniləndi!");
+        }
+    </script>
+</body>
+</html>

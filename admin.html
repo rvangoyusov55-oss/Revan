@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="az">
+<head>
+    <meta charset="UTF-8">
+    <title>Həkim Paneli | MedCloud</title>
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; margin: 0; background: #f4f7f6; }
+        .header { background: #0056b3; color: white; padding: 15px 40px; display: flex; justify-content: space-between; align-items: center; }
+        .container { padding: 40px; }
+        table { width: 100%; background: white; border-collapse: collapse; box-shadow: 0 4px 12px rgba(0,0,0,0.05); border-radius: 10px; }
+        th, td { padding: 18px; text-align: left; border-bottom: 1px solid #eee; }
+        th { background: #fafafa; color: #555; text-transform: uppercase; font-size: 12px; }
+        .blood-badge { background: #ffeded; color: #d63031; padding: 4px 10px; border-radius: 5px; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h2>MedCloud | Tibbi Reyestr</h2>
+        <button onclick="location.href='/'" style="background: white; border:none; padding: 8px 15px; border-radius: 5px; cursor:pointer;">Çıxış</button>
+    </div>
+    <div class="container">
+        <h3>Sistemdəki Pasiyentlər</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>№</th>
+                    <th>Tam Adı</th>
+                    <th>FIN</th>
+                    <th>Qan Qrupu</th>
+                </tr>
+            </thead>
+            <tbody id="list"></tbody>
+        </table>
+    </div>
+    <script>
+        async function load() {
+            const res = await fetch('/api/admin/patients');
+            const data = await res.json();
+            document.getElementById('list').innerHTML = data.map(p => `
+                <tr>
+                    <td>${p.id}</td>
+                    <td><strong>${p.full_name}</strong></td>
+                    <td><code>${p.fin_code}</code></td>
+                    <td><span class="blood-badge">${p.blood_group}</span></td>
+                </tr>
+            `).join('');
+        }
+        load();
+    </script>
+</body>
+</html>
